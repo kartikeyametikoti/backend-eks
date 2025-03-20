@@ -9,4 +9,4 @@ spec:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-  type: {{ .Values.backend.servicetype}}
+  type: {{ .Values.backend.servicetype }}
