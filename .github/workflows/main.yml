@@ -59,7 +59,7 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-         helm install backend-eks ./backend-helm -f backend-helm/values.yaml
+         helm upgrade --install backend-eks ./backend-helm -f backend-helm/values.yaml
       - name: Restart Deployments
         run: |
          kubectl rollout restart deployment ${{ secrets.BACKEND_DEPLOYMENT_NAME}}
