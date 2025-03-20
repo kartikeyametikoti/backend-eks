@@ -1,0 +1,71 @@
+name: cicd-ec2
+
+on:
+  push:
+    branches:
+      - main
+env:
+  ECR_REPO_frontend: ${{ secrets.ECR_REPO_frontend }}  
+  ECR_REPO_backend: ${{ secrets.ECR_REPO_backend }}
+  ECR_password: ${{ secrets.ECR_password }}
+
+jobs:
+  build_image_deploy:
+    runs-on: ubuntu-latest  
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Log in to AWS 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.Access_key_id }}  
+          aws-secret-access-key: ${{ secrets.Access_key }}  
+          aws-region: ${{ secrets.AWS_REGION}}
+      - name: Login to AWS ECR
+        run: | 
+           aws ecr get-login-password --region ${{ secrets.AWS_REGION}} | docker login --username AWS --password-stdin $ECR_password
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.BACKEND_IMAGE_NAME}} ./backend/
+          docker build -t ${{ secrets.FRONTEND_IMAGE_NAME}} ./frontend/
+      - name: Push image to ECR
+        run: |
+          docker tag backend:latest ${{ secrets.ECR_REPO_backend }}:${{ secrets.IMAGE_TAG}}
+          docker tag frontend:latest ${{ secrets.ECR_REPO_frontend }}:${{ secrets.IMAGE_TAG}}
+          docker push ${{ secrets.ECR_REPO_backend }}:${{ secrets.IMAGE_TAG}}
+          docker push ${{ secrets.ECR_REPO_frontend }}:${{ secrets.IMAGE_TAG}}
+    
+  deploy_to_EKS:
+    needs: build_image_deploy
+    runs-on: ubuntu-latest  
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Log in to AWS 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.Access_key_id }}  
+          aws-secret-access-key: ${{ secrets.Access_key }}  
+          aws-region: ${{ secrets.AWS_REGION}}  
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION}} --name ${{ secrets.CLUSTER_NAME}}
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install ${{ secrets.REVISION }} ./${{ secrets.HELM_CHART_FOLDER_NAME }} -f ${{ secrets.HELM_CHART_FOLDER_NAME }}/values.yaml
+      - name: Restart Deployments
+        run: |
+         kubectl rollout restart deployment ${{ secrets.BACKEND_DEPLOYMENT_NAME}}
+         kubectl rollout restart deployment ${{ secrets.FRONTEND_DEPLOYMENT_NAME}}
+         
