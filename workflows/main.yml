@@ -1,11 +1,10 @@
-name: cicd-ec2
+name: cicd-backend
 
 on:
   push:
     branches:
       - main
-env:
-  ECR_REPO_frontend: ${{ secrets.ECR_REPO_frontend }}  
+env: 
   ECR_REPO_backend: ${{ secrets.ECR_REPO_backend }}
   ECR_password: ${{ secrets.ECR_password }}
 
@@ -26,14 +25,11 @@ jobs:
            aws ecr get-login-password --region ${{ secrets.AWS_REGION}} | docker login --username AWS --password-stdin $ECR_password
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.BACKEND_IMAGE_NAME}} ./backend/
-          docker build -t ${{ secrets.FRONTEND_IMAGE_NAME}} ./frontend/
+          docker build -t backend .
       - name: Push image to ECR
         run: |
           docker tag backend:latest ${{ secrets.ECR_REPO_backend }}:${{ secrets.IMAGE_TAG}}
-          docker tag frontend:latest ${{ secrets.ECR_REPO_frontend }}:${{ secrets.IMAGE_TAG}}
           docker push ${{ secrets.ECR_REPO_backend }}:${{ secrets.IMAGE_TAG}}
-          docker push ${{ secrets.ECR_REPO_frontend }}:${{ secrets.IMAGE_TAG}}
     
   deploy_to_EKS:
     needs: build_image_deploy
@@ -67,5 +63,5 @@ jobs:
       - name: Restart Deployments
         run: |
          kubectl rollout restart deployment ${{ secrets.BACKEND_DEPLOYMENT_NAME}}
-         kubectl rollout restart deployment ${{ secrets.FRONTEND_DEPLOYMENT_NAME}}
+         
          
