@@ -34,7 +34,7 @@ with app.app_context():
 # **Root Route ("/api")**
 @app.route('/api', methods=['GET'])
 def home():
-    return jsonify({"message": "This is my backend application now "}), 200
+    return jsonify({"message": "This is my backend application then "}), 200
 
 # **Signup Route**
 @app.route('/api/signup', methods=['POST'])
