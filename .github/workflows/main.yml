@@ -59,7 +59,7 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          helm upgrade --install ${{ secrets.REVISION }} ./${{ secrets.HELM_CHART_FOLDER_NAME }} -f ${{ secrets.HELM_CHART_FOLDER_NAME }}/values.yaml
+          helm upgrade --install ${{ secrets.REVISION }} ${{ secrets.HELM_CHART_FOLDER_NAME }} -f ${{ secrets.HELM_CHART_FOLDER_NAME }}/values.yaml
       - name: Restart Deployments
         run: |
          kubectl rollout restart deployment ${{ secrets.BACKEND_DEPLOYMENT_NAME}}
