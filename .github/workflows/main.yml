@@ -22,7 +22,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION}}
       - name: getting the commid id as tag
         run: |
-           COMMIT_ID=$(git rev-parse --short=6 HEAD)
+           echo "COMMIT_ID=$(git rev-parse --short=6 HEAD)" >> $GITHUB_ENV
       - name: Login to AWS ECR
         run: | 
            aws ecr get-login-password --region ${{ secrets.AWS_REGION}} | docker login --username AWS --password-stdin $ECR_password
