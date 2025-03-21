@@ -5,7 +5,7 @@ metadata:
 spec:
   clusterIP: None  # Headless Service for StatefulSet
   selector:
-    app: mysql
+    app: {{ include "mysql-label" . }}
   ports:
     - protocol: TCP
       port: {{ .Values.mysql.ports.port }}
