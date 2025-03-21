@@ -4,7 +4,7 @@ metadata:
   name: mysql
 spec:
   serviceName: "mysql-service"
-  replicas: 1
+  replicas: {{ .Values.mysql.replicas }}
   selector:
     matchLabels:
       app: {{ include "mysql-label" . }}
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mysql-container
-          image: mysql:latest
+          image: {{ .Values.mysql.image }}
           ports:
             - containerPort: 3306
           env:
