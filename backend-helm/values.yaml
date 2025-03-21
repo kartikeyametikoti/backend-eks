@@ -5,10 +5,13 @@ backend:
   image:
     repository: 869935092862.dkr.ecr.us-east-1.amazonaws.com/backend
     tag: latest
-  env:
-    - name: FLASK_RUN_HOST
-      value: "0.0.0.0"
+  config:
+    FLASK_RUN_HOST: "0.0.0.0"
   service:
     type: ClusterIP
     port: 5000
-
+secrets: 
+  MYSQL_DATABASE: kartikdatabase
+  MYSQL_ROOT_PASSWORD: password
+  MYSQL_USER: kartikuser
+  MYSQL_PASSWORD: password
