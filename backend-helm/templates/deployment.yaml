@@ -20,4 +20,7 @@ spec:
             - containerPort: 80
           env:
             - name: FLASK_RUN_HOST
-              value: "0.0.0.0"
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: FLASK_RUN_HOST
