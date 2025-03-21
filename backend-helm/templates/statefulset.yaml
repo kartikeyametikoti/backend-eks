@@ -7,11 +7,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: {{ include "mysql-label" . }}
   template:
     metadata:
       labels:
-        app: mysql
+        app: {{ include "mysql-label" . }}
     spec:
       containers:
         - name: mysql-container

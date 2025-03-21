@@ -6,18 +6,18 @@ spec:
   replicas: {{ .Values.backend.replicas }}
   selector:
     matchLabels:
-      app: backend
+      app: {{ include "backend-label" . }}
   template:
     metadata:
       labels:
-        app: backend
+        app: {{ include "backend-label" . }}
     spec:
       containers:
         - name: backend
           image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.backend.ports.containerPort }}
           env:
             - name: FLASK_RUN_HOST
               valueFrom:
