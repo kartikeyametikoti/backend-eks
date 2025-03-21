@@ -20,16 +20,19 @@ jobs:
           aws-access-key-id: ${{ secrets.Access_key_id }}  
           aws-secret-access-key: ${{ secrets.Access_key }}  
           aws-region: ${{ secrets.AWS_REGION}}
+      - name: getting the commid id as tag
+        run: |
+           COMMIT_ID=$(git rev-parse --short=6 HEAD)
       - name: Login to AWS ECR
         run: | 
            aws ecr get-login-password --region ${{ secrets.AWS_REGION}} | docker login --username AWS --password-stdin $ECR_password
       - name: Build Docker image
         run: |
-          docker build -t backend .
+          docker build -t backend:$COMMIT_ID .
       - name: Push image to ECR
         run: |
-          docker tag backend:latest ${{ secrets.ECR_REPO_backend }}:${{ secrets.IMAGE_TAG}}
-          docker push ${{ secrets.ECR_REPO_backend }}:${{ secrets.IMAGE_TAG}}
+          docker tag backend:$COMMIT_ID ${{ secrets.ECR_REPO_backend }}:$COMMIT_ID
+          docker push ${{ secrets.ECR_REPO_backend }}:$COMMIT_ID
     
   deploy_to_EKS:
     needs: build_image_deploy
@@ -59,7 +62,9 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-         helm upgrade --install ${{ secrets.HELM_RELEASE }} ./${{ secrets.HELM_REPO_PATH }} -f ${{ secrets.HELM_REPO_PATH }}/values.yaml
+         helm upgrade --install ${{ secrets.HELM_RELEASE }} ./${{ secrets.HELM_REPO_PATH }} -f ${{ secrets.HELM_REPO_PATH }}/values.yaml \
+         --set backend.image.tag=$COMMIT_ID \
+         --description "Git Commit: $COMMIT_ID"
       - name: Restart Deployments
         run: |
          kubectl rollout restart deployment ${{ secrets.BACKEND_DEPLOYMENT_NAME}}
