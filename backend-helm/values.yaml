@@ -1,5 +1,5 @@
 ingress:
-  host: a02d89b7b24714d5d988cfb712dadbbd-1833324318.us-east-1.elb.amazonaws.com
+  host: a5b932b222704417ba8c156b8398fdbb-1366802763.us-east-1.elb.amazonaws.com
 mysql:
   label: mysql
   image: mysql:latest
