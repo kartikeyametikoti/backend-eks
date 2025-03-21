@@ -13,7 +13,7 @@ backend:
   label: backend
   image:
     repository: 869935092862.dkr.ecr.us-east-1.amazonaws.com/backend
-    tag: latest
+    tag: ""
   ports:
     containerPort: 80
   config:
