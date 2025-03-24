@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-backup-cronjob
+spec:
+  schedule: "0 */6 * * *"  # Runs every 6 hours
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mysql-backup
+            image: amazonlinux  # Use an image with MySQL & AWS CLI
+            command:
+              - /bin/sh
+              - -c
+              - |
+                # Take MySQL backup and store in PV
+                mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
+                
+                # Upload backup to S3
+                aws s3 cp /backup/mysql-backup.sql s3://my-backup-bucket/mysql-backup-$(date +\%F).sql
+                
+                echo "Backup completed and uploaded to S3!"
+            env:
+              - name: MYSQL_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: myapp-secret
+                    key: MYSQL_ROOT_PASSWORD
+              - name: AWS_ACCESS_KEY_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: aws-secret
+                    key: AWS_ACCESS_KEY_ID
+              - name: AWS_SECRET_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: aws-secret
+                    key: AWS_SECRET_ACCESS_KEY
+              - name: AWS_DEFAULT_REGION
+                value: "us-east-1"  # Change to your AWS region
+            volumeMounts:
+              - name: backup-storage
+                mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: backup-storage
+
