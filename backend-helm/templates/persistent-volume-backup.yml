@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: Helm
   annotations:
-    meta.helm.sh/release-name: my-release  # Replace with your actual Helm release name
+    meta.helm.sh/release-name: backend-eks  # Replace with your actual Helm release name
     meta.helm.sh/release-namespace: default  # Replace with your actual namespace
 spec:
   capacity:
