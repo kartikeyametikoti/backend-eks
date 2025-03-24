@@ -1,5 +1,5 @@
 ingress:
-  host: a5b932b222704417ba8c156b8398fdbb-1366802763.us-east-1.elb.amazonaws.com
+  host: a47214a85e8ae4ef6b15c1e8785bd139-2096017316.us-east-1.elb.amazonaws.com
 mysql:
   label: mysql
   image: mysql:latest
@@ -7,7 +7,7 @@ mysql:
   ports:
     port: 3306
     targetPort: 3306
-  host: a5b932b222704417ba8c156b8398fdbb-1366802763.us-east-1.elb.amazonaws.com
+  host: a47214a85e8ae4ef6b15c1e8785bd139-2096017316.us-east-1.elb.amazonaws.com
 backend:
   replicas: 2
   label: backend
