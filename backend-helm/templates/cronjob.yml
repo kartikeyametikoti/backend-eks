@@ -26,7 +26,6 @@ spec:
 
                   # Upload backup to S3
                   aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
-
                   echo "Backup completed and uploaded to S3!"
             env:
               - name: MYSQL_ROOT_PASSWORD
