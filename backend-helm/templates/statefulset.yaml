@@ -44,21 +44,3 @@ spec:
               mountPath: /var/lib/mysql
             - name: backup-storage
               mountPath: /backup
-  volumeClaimTemplates:
-    - metadata:
-        name: mysql-storage
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: "128Mi"  # Change this based on your needs
-        storageClassName: manual
-    - metadata:
-        name: backup-storage
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: "128Mi"  # Change this based on your needs
-        storageClassName: manual
-
