@@ -17,6 +17,7 @@ spec:
               - |
                 mkdir -p /backup
                 chown -R 1001:1001 /backup  # Ensure MySQL has write access
+                chmod -R 777 /backup
                 mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
                 echo "Backup completed and stored in /backup!"
             securityContext:
