@@ -3,7 +3,6 @@ kind: CronJob
 metadata:
   name: mysql-backup-cronjob
 spec:
-  schedule: "* */6 * * *"  # Runs every 6 hour
   schedule: "*/30 * * * *"  # Runs every 6 hours
   jobTemplate:
     spec:
@@ -11,7 +10,7 @@ spec:
         spec:
           containers:
           - name: mysql-backup
-            image: amazonlinux  # Use an image with MySQL & AWS CLI
+            image: amazonlinux:latest  # Use an image with MySQL & AWS CLI
             command:
               - /bin/sh
               - -c
