@@ -11,18 +11,18 @@ spec:
           containers:
           - name: mysql-backup
             image: mysql:8.0  # Use an image with MySQL & AWS CLI
-             command:
-               - /bin/sh
-               - -c
-               - |
-                 apt-get update && apt-get install -y awscli
-                 # Take MySQL backup and store in PV
-                 mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
+            command:
+              - /bin/sh
+              - -c
+              - |
+                apt-get update && apt-get install -y awscli
+                # Take MySQL backup and store in PV
+                mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
                  
-                 # Upload backup to S3
-                 aws s3 cp /backup/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
+                # Upload backup to S3
+                aws s3 cp /backup/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
                  
-                 echo "Backup completed and uploaded to S3!"
+                echo "Backup completed and uploaded to S3!"
             env:
               - name: MYSQL_ROOT_PASSWORD
                 valueFrom:
