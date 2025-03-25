@@ -19,7 +19,7 @@ spec:
                 mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
                 
                 # Upload backup to S3
-                aws s3 cp /backup/mysql-backup.sql s3://kartikvuck/mysql-backup-$(date +\%F).sql
+                aws s3 cp /backup/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
                 
                 echo "Backup completed and uploaded to S3!"
             env:
