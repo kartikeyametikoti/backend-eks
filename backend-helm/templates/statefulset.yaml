@@ -40,7 +40,14 @@ spec:
                   name: myapp-secret
                   key: MYSQL_PASSWORD
           volumeMounts:
-            - name: mysql-storage-mysql-0
+            - name: mysql-storage
               mountPath: /var/lib/mysql
-            - name: backup-storage-mysql-0
+            - name: backup-storage
               mountPath: /backup
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-storage  # Referencing the existing PVC
+        - name: backup-storage
+          persistentVolumeClaim:
+            claimName: backup-storage
