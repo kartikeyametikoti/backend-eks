@@ -53,23 +53,11 @@ spec:
         spec:
           containers:
             - name: mysql-backup
-              image: mysql:8.0
+              image: 298334369719.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest
               command:
                 - /bin/sh
                 - -c
-                - |
-                  apt-get update && apt-get install -y awscli
-                  mkdir -p /backup  # Ensure the backup directory exists
-
-                  # Take MySQL backup in a writable location
-                  mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /tmp/mysql-backup.sql
-
-                  # Move backup to /backup for storage
-                  cp /tmp/mysql-backup.sql /backup/mysql-backup.sql
-
-                  # Upload backup to S3
-                  aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
-                  echo "Backup completed and uploaded to S3!"
+                - /backup/backup.sh
               env:
                 - name: MYSQL_ROOT_PASSWORD
                   valueFrom:
