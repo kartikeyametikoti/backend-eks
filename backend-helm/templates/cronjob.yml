@@ -46,7 +46,7 @@ kind: CronJob
 metadata:
   name: mysql-backup-cronjob
 spec:
-  schedule: "*/30 * * * *"  # Runs every 2 minutes (change as needed)
+  schedule: "*/4 * * * *"  # Runs every 2 minutes (change as needed)
   jobTemplate:
     spec:
       template:
