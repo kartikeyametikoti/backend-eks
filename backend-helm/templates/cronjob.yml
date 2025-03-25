@@ -15,6 +15,7 @@ spec:
               - /bin/sh
               - -c
               - |
+                mkdir -p /backup
                 apt-get update && apt-get install -y awscli
                 # Take MySQL backup and store in PV
                 mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
