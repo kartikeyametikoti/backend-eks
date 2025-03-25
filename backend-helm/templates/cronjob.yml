@@ -10,31 +10,19 @@ spec:
         spec:
           containers:
           - name: mysql-backup
-            image: bitnami/mysql:8.0
-            command:
-              - /bin/sh
-              - -c
-              - |
-                mkdir -p /backup
-                chown -R 1001:1001 /backup  # Ensure MySQL has write access
-                chmod -R 777 /backup
-                mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
-                echo "Backup completed and stored in /backup!"
-            securityContext:
-              runAsUser: 1001
-            volumeMounts:
-              - name: backup-storage
-                mountPath: /backup
-
-          - name: aws-cli
-            image: amazon/aws-cli:latest  # Separate AWS CLI container
-            command:
-              - /bin/sh
-              - -c
-              - |
-                sleep 60  # Wait for MySQL backup to complete
-                aws s3 cp /backup/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
-                echo "Backup uploaded to S3!"
+             image: mysql:8.0  # Use an image with MySQL & AWS CLI
+             command:
+               - /bin/sh
+               - -c
+               - |
+                 apt-get update && apt-get install -y awscli
+                 # Take MySQL backup and store in PV
+                 mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
+                 
+                 # Upload backup to S3
+                 aws s3 cp /backup/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
+                 
+                 echo "Backup completed and uploaded to S3!"
             env:
               - name: MYSQL_ROOT_PASSWORD
                 valueFrom:
