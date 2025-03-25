@@ -10,12 +10,12 @@ spec:
         spec:
           containers:
           - name: mysql-backup
-            image: amazonlinux:latest  # Use an image with MySQL & AWS CLI
+            image: mysql:8.0  # Use an image with MySQL & AWS CLI
             command:
               - /bin/sh
               - -c
               - |
-                yum install -y mysql aws-cli
+                apt-get update && apt-get install -y awscli
                 # Take MySQL backup and store in PV
                 mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
                 
