@@ -15,6 +15,7 @@ spec:
               - /bin/sh
               - -c
               - |
+                yum install -y mysql aws-cli
                 # Take MySQL backup and store in PV
                 mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /backup/mysql-backup.sql
                 
