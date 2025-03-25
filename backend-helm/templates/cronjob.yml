@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
           - name: mysql-backup
-            image: mysql:8.0  # Use an image with MySQL & AWS CLI
+            image: bitnami/mysql:8.0  # Use an image with MySQL & AWS CLI
             command:
               - /bin/sh
               - -c
