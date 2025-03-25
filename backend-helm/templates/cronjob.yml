@@ -1,9 +1,64 @@
+# apiVersion: batch/v1
+# kind: CronJob
+# metadata:
+#   name: mysql-backup-cronjob
+# spec:
+#   schedule: "*/2 * * * *"  # Runs every 6 hours
+#   jobTemplate:
+#     spec:
+#       template:
+#         spec:
+#           containers:
+#             - name: mysql-backup
+#               image: mysql:8.0
+#               command:
+#                 - /bin/sh
+#                 - -c
+#                 - |
+#                   apt-get update && apt-get install -y awscli
+#                   mkdir -p /backup  # Ensure the backup directory exists
+
+#                   # Take MySQL backup in a writable location
+#                   mysqldump -u root -p$MYSQL_ROOT_PASSWORD kartikdatabase > /tmp/mysql-backup.sql
+
+#                   # Move backup to /backup for storage
+#                   cp /tmp/mysql-backup.sql /backup/mysql-backup.sql
+
+#                   # Upload backup to S3
+#                   aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
+#                   echo "Backup completed and uploaded to S3!"
+#             env:
+#               - name: MYSQL_ROOT_PASSWORD
+#                 valueFrom:
+#                   secretKeyRef:
+#                     name: myapp-secret
+#                     key: MYSQL_ROOT_PASSWORD
+#               - name: AWS_ACCESS_KEY_ID
+#                 valueFrom:
+#                   secretKeyRef:
+#                     name: myapp-secret
+#                     key: AWS_ACCESS_KEY_ID
+#               - name: AWS_SECRET_ACCESS_KEY
+#                 valueFrom:
+#                   secretKeyRef:
+#                     name: myapp-secret
+#                     key: AWS_SECRET_ACCESS_KEY
+#               - name: AWS_DEFAULT_REGION
+#                 value: "us-east-1"  # Change to your AWS region
+#             volumeMounts:
+#               - name: backup-storage
+#                 mountPath: /backup
+#           restartPolicy: OnFailure
+#           volumes:
+#           - name: backup-storage
+#             persistentVolumeClaim:
+#               claimName: backup-storage
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: mysql-backup-cronjob
 spec:
-  schedule: "*/2 * * * *"  # Runs every 6 hours
+  schedule: "*/2 * * * *"  # Runs every 2 minutes (change as needed)
   jobTemplate:
     spec:
       template:
@@ -27,29 +82,30 @@ spec:
                   # Upload backup to S3
                   aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck1/mysql-backup-$(date +\%F).sql
                   echo "Backup completed and uploaded to S3!"
-            env:
-              - name: MYSQL_ROOT_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: myapp-secret
-                    key: MYSQL_ROOT_PASSWORD
-              - name: AWS_ACCESS_KEY_ID
-                valueFrom:
-                  secretKeyRef:
-                    name: myapp-secret
-                    key: AWS_ACCESS_KEY_ID
-              - name: AWS_SECRET_ACCESS_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: myapp-secret
-                    key: AWS_SECRET_ACCESS_KEY
-              - name: AWS_DEFAULT_REGION
-                value: "us-east-1"  # Change to your AWS region
-            volumeMounts:
-              - name: backup-storage
-                mountPath: /backup
+              env:
+                - name: MYSQL_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: myapp-secret
+                      key: MYSQL_ROOT_PASSWORD
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: myapp-secret
+                      key: AWS_ACCESS_KEY_ID
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: myapp-secret
+                      key: AWS_SECRET_ACCESS_KEY
+                - name: AWS_DEFAULT_REGION
+                  value: "us-east-1"  # Change to your AWS region
+              volumeMounts:
+                - name: backup-storage
+                  mountPath: /backup
           restartPolicy: OnFailure
           volumes:
-          - name: backup-storage
-            persistentVolumeClaim:
-              claimName: backup-storage
+            - name: backup-storage
+              persistentVolumeClaim:
+                claimName: backup-storage
+
