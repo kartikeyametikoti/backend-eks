@@ -40,7 +40,7 @@ spec:
                   name: myapp-secret
                   key: MYSQL_PASSWORD
           volumeMounts:
-            - name: mysql-storage
+            - name: mysql-storage-mysql-0
               mountPath: /var/lib/mysql
-            - name: backup-storage
+            - name: backup-storage-mysql-0
               mountPath: /backup

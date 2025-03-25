@@ -1,5 +1,5 @@
 ingress:
-  host: a47214a85e8ae4ef6b15c1e8785bd139-2096017316.us-east-1.elb.amazonaws.com
+  host: ae17af75262a649ef97d437b2ae80270-525036724.us-east-1.elb.amazonaws.com
 mysql:
   label: mysql
   image: mysql:latest
@@ -7,12 +7,12 @@ mysql:
   ports:
     port: 3306
     targetPort: 3306
-  host: a47214a85e8ae4ef6b15c1e8785bd139-2096017316.us-east-1.elb.amazonaws.com
+  host: ae17af75262a649ef97d437b2ae80270-525036724.us-east-1.elb.amazonaws.com
 backend:
   replicas: 2
   label: backend
   image:
-    repository: 869935092862.dkr.ecr.us-east-1.amazonaws.com/backend
+    repository: 298334369719.dkr.ecr.us-east-1.amazonaws.com/backend
     tag: ""
   ports:
     containerPort: 80
@@ -27,5 +27,5 @@ secrets:
   MYSQL_ROOT_PASSWORD: password
   MYSQL_USER: kartikuser
   MYSQL_PASSWORD: password
-  AWS_ACCESS_KEY_ID: AKIA4VDBMCR7FIUKSA4P
-  AWS_SECRET_ACCESS_KEY: 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
+  AWS_ACCESS_KEY_ID: AKIAUK5Q5G63ZS72EYNR
+  AWS_SECRET_ACCESS_KEY: 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
