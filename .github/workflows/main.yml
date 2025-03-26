@@ -29,7 +29,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t backend:$COMMIT_ID .
-          docker build -t 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest ./cronjob-requirements/
+          docker build -t 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest ./cronjob-requiremets/
       - name: Push image to ECR
         run: |
           docker tag backend:$COMMIT_ID ${{ secrets.ECR_REPO_backend }}:$COMMIT_ID
