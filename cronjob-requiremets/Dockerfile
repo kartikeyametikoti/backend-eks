@@ -55,7 +55,7 @@ WORKDIR /backup
 COPY backup.sh .
 
 # Give execute permissions
-RUN chmod +x backup.sh
+RUN chmod 777 backup.sh
 
 # Run the backup script on startup and keep the container running
 # actually /dev/null is like a blackhole what ever the data comes to that file it arises it 
