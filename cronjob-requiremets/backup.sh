@@ -1,3 +1,29 @@
+#!/bin/sh
+echo "Starting MySQL Backup..."
+
+# Ensure MySQL is running
+sleep 10
+
+# Check AWS credentials
+aws sts get-caller-identity
+if [ $? -ne 0 ]; then
+    echo "AWS credentials are invalid!"
+    exit 1
+fi
+
+# Dump MySQL database
+mysqldump -u root -p"$MYSQL_ROOT_PASSWORD" kartikdatabase > /tmp/mysql-backup.sql
+
+# Move backup to a persistent volume location
+cp /tmp/mysql-backup.sql /backup/mysql-backup.sql
+
+# Upload to S3
+aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck2/mysql-backup-$(date +\%F-%H-%M).sql
+
+echo "Backup completed and uploaded to S3!"
+
+
+  
 # echo "Starting MySQL Backup..."
 
 # # Create a backup directory if not exists
@@ -13,32 +39,34 @@
 # # Upload to S3 for this we need aws login actually those credentials we can get from cronjob environment variables from secrets.yml file
 # aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck2/mysql-backup-$(date +\%F-%H-%M).sql
 
-echo "Backup completed and uploaded to S3!"
-#!/bin/sh
-echo "Starting MySQL Backup..."
 
-# Ensure backup directory is writable
-mkdir -p /backup
-chmod -R 777 /backup
 
-# Ensure MySQL is running
-sleep 10
+# echo "Backup completed and uploaded to S3!"
+# #!/bin/sh
+# echo "Starting MySQL Backup..."
 
-# Check AWS credentials
-aws sts get-caller-identity
-if [ $? -ne 0 ]; then
-    echo "AWS credentials are invalid!"
-    exit 1
-fi
+# # Ensure backup directory is writable
+# mkdir -p /backup
+# chmod -R 777 /backup
 
-# Dump MySQL database 
-mysqldump -u root -p"$MYSQL_ROOT_PASSWORD" kartikdatabase > /tmp/mysql-backup.sql
+# # Ensure MySQL is running
+# sleep 10
 
-# Move backup to a persistent volume location
-cp /tmp/mysql-backup.sql /backup/mysql-backup.sql
+# # Check AWS credentials
+# aws sts get-caller-identity
+# if [ $? -ne 0 ]; then
+#     echo "AWS credentials are invalid!"
+#     exit 1
+# fi
 
-# Upload to S3
-aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck2/mysql-backup-$(date +\%F-%H-%M).sql
+# # Dump MySQL database 
+# mysqldump -u root -p"$MYSQL_ROOT_PASSWORD" kartikdatabase > /tmp/mysql-backup.sql
 
-echo "Backup completed and uploaded to S3!"
+# # Move backup to a persistent volume location
+# cp /tmp/mysql-backup.sql /backup/mysql-backup.sql
+
+# # Upload to S3
+# aws s3 cp /tmp/mysql-backup.sql s3://kartikvuck2/mysql-backup-$(date +\%F-%H-%M).sql
+
+# echo "Backup completed and uploaded to S3!"
 
