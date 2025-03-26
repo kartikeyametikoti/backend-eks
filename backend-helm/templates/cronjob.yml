@@ -60,7 +60,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - backup.sh
+                - /backup/backup.sh
               env:
                 - name: MYSQL_ROOT_PASSWORD
                   valueFrom:
