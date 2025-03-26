@@ -13,9 +13,9 @@
 #             - name: s3-backup-sa
 #               image: 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest
 #               command:
-#                 - /bin/sh
+#                 - /bin/bash
 #                 - -c
-#                 - backup/backup.sh
+#                 - backup.sh
 #             env:
 #               - name: MYSQL_ROOT_PASSWORD
 #                 valueFrom:
