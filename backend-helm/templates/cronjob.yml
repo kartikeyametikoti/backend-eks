@@ -10,7 +10,7 @@
 #         spec:
 #           containers:
 #             - name: mysql-backup
-#               image: 298334369719.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest
+#               image: 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest
 #               command:
 #                 - /bin/sh
 #                 - -c
