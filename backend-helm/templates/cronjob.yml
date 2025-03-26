@@ -15,7 +15,7 @@
 #               command:
 #                 - /bin/sh
 #                 - -c
-#                 - /babackup.sh
+#                 - backup/backup.sh
 #             env:
 #               - name: MYSQL_ROOT_PASSWORD
 #                 valueFrom:
