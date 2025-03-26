@@ -6,7 +6,7 @@
 #   schedule: "*/2 * * * *"  # Runs every 6 hours
 #   jobTemplate:
 #     spec:
-#       serviceAccountName: mysql-backup-sa
+#       serviceAccountName: s3-backup-sa
 #       template:
 #         spec:
 #           containers:
@@ -52,7 +52,7 @@ spec:
     spec:
       template:
         spec:
-          serviceAccountName: mysql-backup-sa
+          serviceAccountName: s3-backup-sa
           containers:
             - name: mysql-backup
               image: 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest
