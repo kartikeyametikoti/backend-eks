@@ -14,7 +14,7 @@
 #               command:
 #                 - /bin/sh
 #                 - -c
-#                 - /backup/backup.sh
+#                 - /babackup.sh
 #             env:
 #               - name: MYSQL_ROOT_PASSWORD
 #                 valueFrom:
@@ -58,7 +58,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - /backup/backup.sh
+                - backup.sh
               env:
                 - name: MYSQL_ROOT_PASSWORD
                   valueFrom:
