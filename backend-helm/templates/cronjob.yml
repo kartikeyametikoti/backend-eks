@@ -57,10 +57,10 @@ spec:
             - name: mysql-backup
               image: 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest
 # we can change  - /backup/backup.sh to -backup.sh or else we can also remove it because we have already given the command to run backup.sh in Dockerfile 
-              command:
-                - /bin/sh
-                - -c
-                - /backup/backup.sh
+              # command:
+              #   - /bin/sh
+              #   - -c
+              #   - /backup/backup.sh
               env:
                 - name: MYSQL_ROOT_PASSWORD
                   valueFrom:
