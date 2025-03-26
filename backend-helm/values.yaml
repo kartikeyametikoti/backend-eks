@@ -12,7 +12,7 @@ backend:
   replicas: 2
   label: backend
   image:
-    repository: 911806762272.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+    repository: 911806762272.dkr.ecr.us-east-1.amazonaws.com/backend
     tag: ""
   ports:
     containerPort: 80
