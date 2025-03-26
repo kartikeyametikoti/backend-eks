@@ -20,7 +20,7 @@
 # WORKDIR /backup
 
 # # Copy the backup script into the container
-# COPY backup.sh .
+# COPY backup.sh /backup/backup.sh
 
 # # Give execute permissions
 # RUN chmod +x backup.sh
