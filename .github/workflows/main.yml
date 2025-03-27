@@ -7,7 +7,9 @@ on:
 env: 
   ECR_REPO_backend: ${{ secrets.ECR_REPO_backend }}
   ECR_password: ${{ secrets.ECR_password }}
-
+permissions:
+      id-token: write   # ✅ Required for OIDC
+      contents: read
 jobs:
   build_image_deploy:
     runs-on: ubuntu-latest  
@@ -17,9 +19,9 @@ jobs:
       - name: Log in to AWS 
         uses: aws-actions/configure-aws-credentials@v1
         with:
+          aws-region: us-east-1  # Replace with your AWS region
           aws-access-key-id: ${{ secrets.Access_key_id }}  
           aws-secret-access-key: ${{ secrets.Access_key }}  
-          aws-region: ${{ secrets.AWS_REGION}}
       - name: getting the commid id as tag
         run: |
            echo "COMMIT_ID=$(git rev-parse --short=6 HEAD)" >> $GITHUB_ENV
@@ -29,12 +31,13 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t backend:$COMMIT_ID .
-          docker build -t 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest ./cronjob-requiremets/
+          docker build -t mysql-aws:latest ./cronjob-requiremets/
       - name: Push image to ECR
         run: |
           docker tag backend:$COMMIT_ID ${{ secrets.ECR_REPO_backend }}:$COMMIT_ID
           docker push ${{ secrets.ECR_REPO_backend }}:$COMMIT_ID
-          docker push 911806762272.dkr.ecr.us-east-1.amazonaws.com/mysql-aws:latest
+          docker tag mysql-aws:latest ${{ secrets.MYSQL_REPO }}:latest
+          docker push ${{ secrets.MYSQL_REPO }}:latest
     
   deploy_to_EKS:
     needs: build_image_deploy
@@ -48,8 +51,11 @@ jobs:
       - name: Log in to AWS 
         uses: aws-actions/configure-aws-credentials@v1
         with:
+          # role-to-assume: arn:aws:iam::015800953128:role/admin-oidc
+          # aws-region: us-east-1  # Replace with your AWS region
+          # audience: sts.amazonaws.com
           aws-access-key-id: ${{ secrets.Access_key_id }}  
-          aws-secret-access-key: ${{ secrets.Access_key }}  
+          aws-secret-access-key: ${{ secrets.Access_key }}
           aws-region: ${{ secrets.AWS_REGION}}  
       - name: Install kubectl
         run: |
@@ -73,5 +79,5 @@ jobs:
       - name: Restart Deployments
         run: |
          kubectl rollout restart deployment ${{ secrets.BACKEND_DEPLOYMENT_NAME}}
-         
+          
          

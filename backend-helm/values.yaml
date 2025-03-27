@@ -12,7 +12,7 @@ backend:
   replicas: 2
   label: backend
   image:
-    repository: 911806762272.dkr.ecr.us-east-1.amazonaws.com/backend
+    repository: 015800953128.dkr.ecr.us-east-1.amazonaws.com/backend
     tag: ""
   ports:
     containerPort: 80
@@ -27,5 +27,5 @@ secrets:
   MYSQL_ROOT_PASSWORD: password
   MYSQL_USER: kartikuser
   MYSQL_PASSWORD: password
-  AWS_ACCESS_KEY_ID: AKIA5IS7LBUQED2CYXWN
-  AWS_SECRET_ACCESS_KEY: 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
+  # AWS_ACCESS_KEY_ID: 
+  # AWS_SECRET_ACCESS_KEY: 
