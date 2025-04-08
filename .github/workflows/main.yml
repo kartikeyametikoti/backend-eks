@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-env: 
-  ECR_REPO_backend: ${{ secrets.ECR_REPO_backend }}
-  ECR_password: ${{ secrets.ECR_password }}
+# env: 
+#   ECR_REPO_backend: ${{ secrets.ECR_REPO_backend }}
+#   ECR_password: ${{ secrets.ECR_password }}
 permissions:
       id-token: write   # ✅ Required for OIDC
       contents: read
@@ -16,12 +16,17 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
-      - name: Log in to AWS 
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: us-east-1  # Replace with your AWS region
-          aws-access-key-id: ${{ secrets.Access_key_id }}  
-          aws-secret-access-key: ${{ secrets.Access_key }}  
+         role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>
+         aws-region: us-east-1
+      # - name: Log in to AWS 
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-region: us-east-1  # Replace with your AWS region
+      #     aws-access-key-id: ${{ secrets.Access_key_id }}  
+      #     aws-secret-access-key: ${{ secrets.Access_key }}  
       - name: getting the commid id as tag
         run: |
            echo "COMMIT_ID=$(git rev-parse --short=6 HEAD)" >> $GITHUB_ENV
