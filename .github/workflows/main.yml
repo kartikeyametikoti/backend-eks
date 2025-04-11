@@ -8,8 +8,8 @@ on:
 #   ECR_REPO_backend: ${{ secrets.ECR_REPO_backend }}
 #   ECR_password: ${{ secrets.ECR_password }}
 permissions:
-      id-token: write   # ✅ Required for OIDC
-      contents: read
+  id-token: write   # ✅ Required for OIDC
+  contents: read
 jobs:
   build_image_deploy:
     runs-on: ubuntu-latest  
