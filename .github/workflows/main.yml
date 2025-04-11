@@ -20,7 +20,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
          role-to-assume: arn:aws:iam::015800953128:role/admin-oidc
-         aws-region: us-east-1
+         aws-region: ${{ secrets.AWS_REGION }}
       # - name: Log in to AWS 
       #   uses: aws-actions/configure-aws-credentials@v1
       #   with:
